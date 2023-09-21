@@ -1,6 +1,6 @@
 import { WechatyBuilder, Message } from 'wechaty'
 
-// import { getResult } from './request'
+import { getResult } from './request.ts'
 
 const wechaty = WechatyBuilder.build() // get a Wechaty instance
 
@@ -13,8 +13,8 @@ async function onMessage(message: Message) {
   const mentionSelf = await message.mentionSelf()
 
   if(mentionSelf) {
-    message.say(`你好${contact?.name()}`)
-    // message.say(await getResult(text))
+    // message.say(`你好${contact?.name()}`)
+    message.say(await getResult(text))
   }
 
 }
