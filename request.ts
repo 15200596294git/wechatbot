@@ -26,6 +26,8 @@ export const getResult = async (ques) => {
 
   const json = await res.json() as ResData
 
+  console.log(JSON.stringify(json))
+
   if(json.code !== 0) {
     return json.msg
   }
@@ -33,4 +35,5 @@ export const getResult = async (ques) => {
   return json.data.result
 };
 
-console.log(await getResult('你好'));
+
+// console.log(await getResult('早上好'));
