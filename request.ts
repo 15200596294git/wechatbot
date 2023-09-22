@@ -5,9 +5,9 @@ export const getResult = async (ques) => {
 
   const params = new URLSearchParams();
   params.append("ques", ques);
-  params.append("appKey", "178Jc6xNi1wa021695304110026nPbfNh9pi3");
+  params.append("appKey", "650c49ce03abd6bee56f640b");
   params.append("uid", "NmkklW1695304110026gZP7PgepBS");
-  params.append("isLongChat", "0");
+  params.append("isLongChat", "1");
 
   const res = await fetch(url, {
     method: "post",
