@@ -2,12 +2,14 @@
   "type": "module",
   "dependencies": {
     "axios": "^1.5.0",
+    "koa": "^2.14.2",
     "node-fetch": "^3.3.2",
     "openai": "^4.10.0",
     "wechaty": "^1.20.2"
   },
   "scripts": {
-    "start": "nodemon --watch src -e ts --exec ts-node src/index.ts"
+    "start": "pm2 start dist/index.js",
+    "serve": "tsc server.ts & pm2 start server.js --watch"
   },
   "devDependencies": {
     "@types/node": "^20.6.3",

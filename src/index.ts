@@ -4,6 +4,8 @@ import { getResult } from './request.ts'
 
 const wechaty = WechatyBuilder.build() // get a Wechaty instance
 
+console.log('日志')
+
 async function onMessage(message: Message) {
   const contact = message.talker()
 
