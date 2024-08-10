@@ -25,15 +25,15 @@ async function onMessage(message: Message) {
     // 获取艾特我的人
     const messionMeOfContact = (await room.alias(contact)) || contact.name()
 
-    if (!messionText.trim()) {
-      message.say(`${messionMeOfContact} 请输入你想要问的问题`)
-      return
-    }
+    // if (!messionText.trim()) {
+    //   message.say(`${messionMeOfContact} 请输入你想要问的问题`)
+    //   return
+    // }
 
-    console.log('发送的 messionText', messionText)
+    // console.log('发送的 messionText', messionText)
 
-    const ret = await getResult(messionText)
-    message.say(`${messionMeOfContact} ${ret}`)
+    // const ret = await getResult(messionText)
+    message.say(`${messionMeOfContact}, ${messionText}`)
   }
 }
 
