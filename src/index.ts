@@ -29,7 +29,7 @@ function onLogout (user) {
 }
 
 async function onMessage (msg: Message) {
-  '收到消息'
+  // '收到消息'
   // log.info('StarterBot', msg.toString())
   console.log("🚀 ~ onMessage ~ '收到消息':", '收到消息')
 
