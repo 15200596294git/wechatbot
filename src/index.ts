@@ -1,50 +1,70 @@
-import { WechatyBuilder, Message } from 'wechaty'
 
-import { getResult } from './request.ts'
+// @ts-nocheck
+import { WechatyBuilder, ScanStatus, log, Message } from 'wechaty'
 
-const wechaty = WechatyBuilder.build() // get a Wechaty instance
+import qrcodeTerminal from 'qrcode-terminal'
 
-console.log('日志')
+function onScan (qrcode, status) {
+  if (status === ScanStatus.Waiting || status === ScanStatus.Timeout) {
+    qrcodeTerminal.generate(qrcode, { small: true })  // show qrcode on console
 
-async function onMessage(message: Message) {
-  const contact = message.talker()
+    const qrcodeImageUrl = [
+      'https://wechaty.js.org/qrcode/',
+      encodeURIComponent(qrcode),
+    ].join('')
 
-  let text = message.text()
+    log.info('StarterBot', 'onScan: %s(%s) - %s', ScanStatus[status], status, qrcodeImageUrl)
 
-  const room = message.room()
-
-  const messionText = await message.mentionText()
-
-  console.log('messionText', messionText)
-
-  // console.log('messionText', text)
-
-  const mentionSelf = await message.mentionSelf()
-
-  if (mentionSelf && room) {
-    // 获取艾特我的人
-    const messionMeOfContact = (await room.alias(contact)) || contact.name()
-
-    // if (!messionText.trim()) {
-    //   message.say(`${messionMeOfContact} 请输入你想要问的问题`)
-    //   return
-    // }
-
-    // console.log('发送的 messionText', messionText)
-
-    // const ret = await getResult(messionText)
-    message.say(`${messionMeOfContact}, ${messionText}`)
+  } else {
+    log.info('StarterBot', 'onScan: %s(%s)', ScanStatus[status], status)
   }
 }
 
-wechaty
-  .on('scan', (qrcode, status) =>
-    console.log(
-      `Scan QR Code to login: ${status}\nhttps://wechaty.js.org/qrcode/${encodeURIComponent(
-        qrcode
-      )}`
-    )
-  )
-  .on('login', (user) => console.log(`User ${user} logged in`))
-  .on('message', onMessage)
-wechaty.start()
+function onLogin (user) {
+  log.info('StarterBot', '%s login', user)
+}
+
+function onLogout (user) {
+  log.info('StarterBot', '%s logout', user)
+}
+
+async function onMessage (msg: Message) {
+  '收到消息'
+  // log.info('StarterBot', msg.toString())
+  console.log("🚀 ~ onMessage ~ '收到消息':", '收到消息')
+
+  const metionSelf = await msg.mentionSelf()
+  // console.log("🚀 ~ onMessage ~ metionSelf:", metionSelf)
+  const mentionText = await msg.mentionText()
+  // console.log("🚀 ~ onMessage ~ mentionText:", mentionText)
+  if (mentionText === 'ding') {
+    await msg.say('dong')
+  }
+}
+
+const bot = WechatyBuilder.build({
+  name: 'ding-dong-bot',
+  /**
+   * How to set Wechaty Puppet Provider:
+   *
+   *  1. Specify a `puppet` option when instantiating Wechaty. (like `{ puppet: 'wechaty-puppet-padlocal' }`, see below)
+   *  1. Set the `WECHATY_PUPPET` environment variable to the puppet NPM module name. (like `wechaty-puppet-padlocal`)
+   *
+   * You can use the following providers:
+   *  - wechaty-puppet-wechat (no token required)
+   *  - wechaty-puppet-padlocal (token required)
+   *  - wechaty-puppet-service (token required, see: <https://wechaty.js.org/docs/puppet-services>)
+   *  - etc. see: <https://github.com/wechaty/wechaty-puppet/wiki/Directory>
+   */
+  // puppet: 'wechaty-puppet-wechat',
+})
+
+
+bot.on('scan',    onScan)
+bot.on('login',   onLogin)
+bot.on('logout',  onLogout)
+bot.on('message', onMessage)
+
+bot.start()
+  .then(() => log.info('StarterBot', 'Starter Bot Started.'))
+  .catch(e => log.error('StarterBot', e))
