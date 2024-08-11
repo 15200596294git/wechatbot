@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 
-export const getResult = async (ques) => {
-  const url = "https://luckycola.com.cn/ai/openwxyy";
+export const getResult = async (ques: string) => {
+  const url = "https://luckycola.com.cn/openai/openaiV3";
 
   const params = new URLSearchParams();
   params.append("ques", ques);
@@ -26,7 +26,7 @@ export const getResult = async (ques) => {
 
   const json = await res.json() as ResData
 
-  console.log(JSON.stringify(json))
+  // console.log(JSON.stringify(json))
 
   if(json.code !== 0) {
     return json.msg

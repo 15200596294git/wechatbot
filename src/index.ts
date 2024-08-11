@@ -4,6 +4,8 @@ import { WechatyBuilder, ScanStatus, log, Message } from 'wechaty'
 
 import qrcodeTerminal from 'qrcode-terminal'
 
+import { getResult } from './request.ts'
+
 function onScan (qrcode, status) {
   if (status === ScanStatus.Waiting || status === ScanStatus.Timeout) {
     qrcodeTerminal.generate(qrcode, { small: true })  // show qrcode on console
@@ -37,8 +39,19 @@ async function onMessage (msg: Message) {
   // console.log("🚀 ~ onMessage ~ metionSelf:", metionSelf)
   const mentionText = await msg.mentionText()
   // console.log("🚀 ~ onMessage ~ mentionText:", mentionText)
-  if (mentionText === 'ding') {
-    await msg.say('dong')
+
+  const talker = msg.talker()
+  if(metionSelf) {
+    if (mentionText.trim() === '') {
+      await msg.say(`${talker.name()}, 请输入你要问的问题`)
+      return
+    }
+    try {
+      const result = await getResult(mentionText)
+      msg.say(`${talker.name()}, ${result}`)
+    } catch (error) {
+      msg.say(`${error.message}`)
+    }
   }
 }
 
