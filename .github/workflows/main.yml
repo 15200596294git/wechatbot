@@ -17,7 +17,7 @@ jobs:
           user: ${{ secrets.MY_USER }} # 服务器用户名
           key: ${{ secrets.SSH_KEY }} # 公钥
           src: './*' # 源路径（工作流）
-          remote: /usr/local/src/wechatbot # 目标路径（服务器）
+          remote: /usr/local/src/wechatbot2 # 目标路径（服务器）
       # - name: Executing remote ssh commands
       #   uses: appleboy/ssh-action@master
       #   with:
