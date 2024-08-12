@@ -6,6 +6,8 @@ import qrcodeTerminal from 'qrcode-terminal'
 
 import { getResult } from './request.ts'
 
+// other
+
 function onScan (qrcode, status) {
   if (status === ScanStatus.Waiting || status === ScanStatus.Timeout) {
     qrcodeTerminal.generate(qrcode, { small: true })  // show qrcode on console
