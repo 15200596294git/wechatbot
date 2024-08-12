@@ -2,17 +2,21 @@
   "type": "module",
   "dependencies": {
     "axios": "^1.5.0",
-    "koa": "^2.14.2",
     "node-fetch": "^3.3.2",
-    "openai": "^4.10.0",
+    "qrcode-terminal": "^0.12.0",
     "wechaty": "^1.20.2"
   },
   "scripts": {
-    "start": "pm2 start dist/index.js",
+    "start": "ts-node src/index.ts",
+    "start2": "nodemon src/index.ts",
     "serve": "tsc server.ts & pm2 start server.js --watch"
   },
   "devDependencies": {
     "@types/node": "^20.6.3",
-    "nodemon": "^3.0.1"
+    "@types/qrcode-terminal": "^0.12.2",
+    "nodemon": "^3.1.4",
+    "ts-node": "^10.9.2",
+    "tslib": "^2.6.3",
+    "typescript": "^5.5.4"
   }
 }
