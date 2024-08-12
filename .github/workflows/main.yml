@@ -16,7 +16,7 @@ jobs:
           host: ${{ secrets.MY_HOST }} # 服务器IP（需要在GitHub上自行配置对应的secret）
           user: ${{ secrets.MY_USER }} # 服务器用户名
           key: ${{ secrets.SSH_KEY }} # 公钥
-          src: '../wechatbot/' # 源路径（工作流）
+          src: '../*' # 源路径（工作流）
           remote: /usr/local/src # 目标路径（服务器）
       # - name: Executing remote ssh commands
       #   uses: appleboy/ssh-action@master
