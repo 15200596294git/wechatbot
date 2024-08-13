@@ -7,9 +7,8 @@
     "wechaty": "^1.20.2"
   },
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "start2": "nodemon src/index.ts",
-    "serve": "tsc server.ts & pm2 start server.js --watch"
+    "start": "nodemon src/index.ts",
+    "deploy": "scp -r ./src ./package.json ./tsconfig.json root@8.155.163.128:/usr/local/src/wechatbot"
   },
   "devDependencies": {
     "@types/node": "^20.6.3",
