@@ -3,14 +3,14 @@ import schedule from 'node-schedule'
 const date = new Date()
 
 // 每天00:00执行
-const rule = new schedule.RecurrenceRule()
-rule.hour = 0
-rule.minute = 0
-rule.second = 0
+// const rule = new schedule.RecurrenceRule()
+// rule.hour = 0
+// rule.minute = 0
+// rule.second = 0
 
 // 每天9:30执行
 const rule2 = new schedule.RecurrenceRule()
-rule.hour = 7
+rule2.hour = 7
 // rule.minute = 0
 // rule.second = 0
 
