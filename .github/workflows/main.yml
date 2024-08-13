@@ -8,16 +8,16 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      # - name: Checkout
-      #   uses: actions/checkout@v3
-      # - name: Deploy
-      #   uses: nogsantos/scp-deploy@master
-      #   with:
-      #     host: ${{ secrets.MY_HOST }} # 服务器IP（需要在GitHub上自行配置对应的secret）
-      #     user: ${{ secrets.MY_USER }} # 服务器用户名
-      #     key: ${{ secrets.SSH_KEY }} # 公钥
-      #     src: './*' # 源路径（工作流）
-      #     remote: /usr/local/src/wechatbot # 目标路径（服务器）
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Deploy
+        uses: nogsantos/scp-deploy@master
+        with:
+          host: ${{ secrets.MY_HOST }} # 服务器IP（需要在GitHub上自行配置对应的secret）
+          user: ${{ secrets.MY_USER }} # 服务器用户名
+          key: ${{ secrets.SSH_KEY }} # 公钥
+          src: './*' # 源路径（工作流）
+          remote: /usr/local/src/wechatbot # 目标路径（服务器）
       - name: Executing remote ssh commands
         uses: appleboy/ssh-action@master
         with:
@@ -27,14 +27,12 @@ jobs:
           script: |
             # echo $PATH
             # echo $NVM_BIN
-            export NVM_BIN=/root/.nvm/versions/node/v20.16.0/bin
-            export PATH=$PATH:$NVM_BIN # 重新定义node的环境变量（必需，这样才能在后续工作流程中运行 npm install 等指令，否则会报错）
-            env
-            nvm ls
-            node -v
+            export NVM_BIN=/root/.nvm/versions/node/v20.16.0/bin # 定义环境变量
+            export PATH=$PATH:$NVM_BIN # 将nvm添加到PATH中
             cd /usr/local/src/wechatbot # 进入服务器中的端工程所在的目录
-            # npm install # 安装项目依赖
-            # pm2 restart 0
+            npm install # 安装项目依赖
+            pm2 restart 0
+            pm2 logs
             # pm2 delete myBlogServer # 删除旧的进程
             # pm2 start --name myBlogServer npm -- run server # 启动新的进程
 

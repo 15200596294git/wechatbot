@@ -6,6 +6,10 @@ import qrcodeTerminal from 'qrcode-terminal'
 
 import { getResult } from './request.ts'
 
+import { testRule, rule2 } from './jobs/moyu.js'
+import schedule from 'node-schedule'
+
+
 // other
 
 function onScan (qrcode, status) {
@@ -26,6 +30,20 @@ function onScan (qrcode, status) {
 
 function onLogin (user) {
   log.info('StarterBot', '%s login', user)
+
+  // 开启定时任务
+  const job = schedule.scheduleJob(testRule, async()=> {
+    await bot.say('每小时发送一次')
+
+    // const room = await bot.Room.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
+    // room?.say('Hello world!')
+  })
+
+  schedule.scheduleJob(rule2, async()=> {
+    const room = await bot.Room.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
+    room?.say(`早上好各位，我是你们的AI小助手！`)
+  })
+   
 }
 
 function onLogout (user) {
