@@ -12,7 +12,7 @@ import schedule from 'node-schedule'
 
 // other
 
-function onScan (qrcode, status) {
+function onScan(qrcode, status) {
   if (status === ScanStatus.Waiting || status === ScanStatus.Timeout) {
     qrcodeTerminal.generate(qrcode, { small: true })  // show qrcode on console
 
@@ -28,29 +28,34 @@ function onScan (qrcode, status) {
   }
 }
 
-function onLogin (user) {
+function onLogin(user) {
   log.info('StarterBot', '%s login', user)
 
   // 开启定时任务
-  const job = schedule.scheduleJob(testRule, async()=> {
+  const job = schedule.scheduleJob(testRule, async () => {
     await bot.say('每小时发送一次')
 
     // const room = await bot.Room.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
     // room?.say('Hello world!')
   })
 
-  schedule.scheduleJob(rule2, async()=> {
-    const room = await bot.Room.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
+  // schedule.scheduleJob(rule2, async()=> {
+  //   const room = await bot.Room.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
+  //   room?.say(`早上好各位，我是你们的AI小助手！`)
+  // })
+
+  schedule.scheduleJob(rule2, async () => {
+    const room = await bot.Room.find('叮叮咚咚')
     room?.say(`早上好各位，我是你们的AI小助手！`)
   })
-   
+
 }
 
-function onLogout (user) {
+function onLogout(user) {
   log.info('StarterBot', '%s logout', user)
 }
 
-async function onMessage (msg: Message) {
+async function onMessage(msg: Message) {
   // '收到消息'
   // log.info('StarterBot', msg.toString())
   console.log("🚀 ~ onMessage ~ '收到消息':", '收到消息')
@@ -61,7 +66,7 @@ async function onMessage (msg: Message) {
   // console.log("🚀 ~ onMessage ~ mentionText:", mentionText)
 
   const talker = msg.talker()
-  if(metionSelf) {
+  if (metionSelf) {
     if (mentionText.trim() === '') {
       await msg.say(`${talker.name()}, 请输入你要问的问题`)
       return
@@ -93,9 +98,9 @@ const bot = WechatyBuilder.build({
 })
 
 
-bot.on('scan',    onScan)
-bot.on('login',   onLogin)
-bot.on('logout',  onLogout)
+bot.on('scan', onScan)
+bot.on('login', onLogin)
+bot.on('logout', onLogout)
 bot.on('message', onMessage)
 
 bot.start()
