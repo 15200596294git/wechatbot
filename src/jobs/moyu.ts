@@ -10,7 +10,7 @@ const date = new Date()
 
 // 每天9:30执行
 const rule2 = new schedule.RecurrenceRule()
-rule2.hour = 8.6
+rule2.hour = 8.7
 // rule.minute = 0
 // rule.second = 0
 
