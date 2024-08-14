@@ -45,11 +45,11 @@ function onLogin(user) {
   //   room?.say(`早上好各位，我是你们的AI小助手！`)
   // })
 
-  if(job1) job1.cancel()
-  job1 = schedule.scheduleJob(rule2, async () => {
-    const room = await bot.Room.find('叮叮咚咚')
-    room?.say(`早上好各位，我是你们的AI小助手！`)
-  })
+  // if(job1) job1.cancel()
+  // job1 = schedule.scheduleJob(rule2, async () => {
+  //   const room = await bot.Room.find('叮叮咚咚')
+  //   room?.say(`早上好各位，我是你们的AI小助手！`)
+  // })
 
 }
 
