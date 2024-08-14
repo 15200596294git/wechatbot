@@ -5,7 +5,7 @@ import qrcodeTerminal from 'qrcode-terminal'
 
 import { getResult } from './request.ts'
 
-import { testRule, myb } from './jobs/moyu.js'
+import { fish, holiday, overtime, drinkWater } from './jobs/moyu.js'
 import schedule, { Job } from 'node-schedule'
 
 // other
@@ -36,26 +36,18 @@ function onLogin(user) {
   log.info('StarterBot', '%s login', user)
 
   // 开启定时任务
-  const job = schedule.scheduleJob(testRule, async () => {
-    await bot.say('每小时发送一次')
-
-    // const room = await bot.Room.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
-    // room?.say('Hello world!')
-  })
-
-  // schedule.scheduleJob(rule2, async()=> {
-  //   const room = await bot.Room.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
-  //   room?.say(`早上好各位，我是你们的AI小助手！`)
+  // const job = schedule.scheduleJob(testRule, async () => {
+  //   await bot.say('每小时发送一次')
   // })
 
-  // if(job1) job1.cancel()
-  // job1 = schedule.scheduleJob(rule2, async () => {
-  //   const room = await bot.Room.find('叮叮咚咚')
-  //   room?.say(`早上好各位，我是你们的AI小助手！`)
-  // })
+  // 测试群 叮叮咚咚
+  // ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴
 
-  schedule.scheduleJob('0 0/30 10-18 * * ?', ()=> {
-    myb(bot)
+
+  schedule.scheduleJob('0 0/30 10-18 * * ?', () => {
+    const room = await bot?.Room?.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
+    let texts = await Promise.all([fish(), overtime()])
+    room?.say(texts.join(''))
   })
 }
 
@@ -65,21 +57,33 @@ function onLogout(user) {
 
 async function onMessage(msg: Message) {
   // '收到消息'
-  // log.info('StarterBot', msg.toString())
   console.log("🚀 ~ onMessage ~ '收到消息':", '收到消息')
-
   const metionSelf = await msg.mentionSelf()
-  // console.log("🚀 ~ onMessage ~ metionSelf:", metionSelf)
   const mentionText = await msg.mentionText()
-  // console.log("🚀 ~ onMessage ~ mentionText:", mentionText)
+
+  // 测试群 叮叮咚咚
+  // ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴
+  const room = await bot?.Room?.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
 
   const talker = msg.talker()
   if (metionSelf) {
     if (mentionText.trim() === '') {
       await msg.say(`${talker.name()}, 请输入你要问的问题`)
       return
-    } else if(mentionText === '摸鱼办') {
-      await myb(bot)
+    } else if (mentionText === '摸鱼办') {
+      let texts = await Promise.all([fish(), overtime()])
+      texts = texts.filter((t) => t !== '已下班!\n')
+      if (!texts.length) {
+        room?.say(`现在是下班时间，请上班时间再摸鱼哦！`)
+      } else {
+        room?.say(texts.join(''))
+      }
+      return
+    } else if (mentionText === '喝水办') {
+      room?.say(await drinkWater())
+      return
+    } else if (mentionText === '假日办') {
+      room?.say(await holiday())
       return
     }
     try {
