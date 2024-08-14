@@ -54,7 +54,7 @@ function onLogin(user) {
   //   room?.say(`早上好各位，我是你们的AI小助手！`)
   // })
 
-  schedule.scheduleJob('5 * * * *', ()=> {
+  schedule.scheduleJob('0 0/30 10-18 * * ?', ()=> {
     myb(bot)
   })
 }

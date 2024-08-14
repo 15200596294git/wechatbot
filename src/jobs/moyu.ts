@@ -1,7 +1,7 @@
 // @ts-nocheck
 import schedule from 'node-schedule'
 import ChineseHolidays from 'chinese-holidays'
-import { nextSunday,isAfter, differenceInDays, nextFriday, differenceInHours, differenceInMilliseconds, differenceInMinutes } from 'date-fns'
+import { nextSunday,isAfter, differenceInDays, nextFriday, differenceInHours, differenceInMilliseconds, differenceInMinutes, nextSaturday } from 'date-fns'
 
 export async function moyu() {
   const now = new Date()
@@ -34,6 +34,7 @@ export async function moyu() {
 }
 
 export async function myb(bot) {
+  const now = new Date()
   const fishTextArray = [
     '工作只是一种状态，摸鱼才是真正的生活方式。',
     '今天的目标：保持高效，顺便摸个鱼。',
@@ -49,13 +50,24 @@ export async function myb(bot) {
   // 测试群 叮叮咚咚
   // ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴
   const room = await bot?.Room?.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
-  room?.say(`${getRandomFishText()}---摸鱼办!`)
-  // console.log(getMessage());
+
+  // 下班时间
+  const currentDateAtSixPM = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 18, 0, 0, 0);
+  const h = differenceInHours(currentDateAtSixPM, now)
+  const m = (differenceInMinutes(currentDateAtSixPM, now)) % 60
+  const overtimeText = h > 0 ? `距离18:00下班还有${h}小时${m}分钟`  : ''
+
+  const dayDis = differenceInDays(nextSaturday(now) , now)
+  const weekendText = `距离周末还有${dayDis}天！`;
+
+  // room?.say(`距离18:00下班还有${h}小时${m}分钟\n${getRandomFishText()}---摸鱼办!`)
+  room?.say(`${overtimeText}\n${weekendText}\n${getRandomFishText()}---摸鱼办!`)
+  
 }
 
 
 
-moyu()
+myb()
 
 // const job = schedule.scheduleJob(rule, ()=> {})
 
