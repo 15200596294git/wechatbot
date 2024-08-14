@@ -44,7 +44,7 @@ function onLogin(user) {
   // ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴
 
 
-  schedule.scheduleJob('0 0/30 10-18 * * ?', () => {
+  schedule.scheduleJob('0 0/30 10-18 * * ?', async() => {
     const room = await bot?.Room?.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
     let texts = await Promise.all([fish(), overtime()])
     room?.say(texts.join(''))
