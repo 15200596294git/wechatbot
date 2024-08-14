@@ -92,7 +92,7 @@ export async function myb(bot) {
   )
   const h = differenceInHours(currentDateAtSixPM, now)
   const m = differenceInMinutes(currentDateAtSixPM, now) % 60
-  const overtimeText = h > 0 ? `距离18:00下班还有${h}小时${m}分钟` : ''
+  const overtimeText = m > 0 ? `距离18:00下班还有${h}小时${m}分钟` : ''
 
   const dayDis = differenceInDays(nextSaturday(now), now)
   const weekendText = `距离周末还有${dayDis}天！`
