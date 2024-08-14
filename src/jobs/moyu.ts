@@ -46,7 +46,9 @@ export async function myb(bot) {
     const randomIndex = Math.floor(Math.random() * fishTextArray.length)
     return fishTextArray[randomIndex]
   }
-  const room = await bot?.Room?.find('叮叮咚咚')
+  // 测试群 叮叮咚咚
+  // ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴
+  const room = await bot?.Room?.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
   room?.say(`${getRandomFishText()}---摸鱼办!`)
   // console.log(getMessage());
 }
