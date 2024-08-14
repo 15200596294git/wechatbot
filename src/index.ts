@@ -1,4 +1,3 @@
-
 // @ts-nocheck
 import { WechatyBuilder, ScanStatus, log, Message } from 'wechaty'
 
@@ -6,23 +5,27 @@ import qrcodeTerminal from 'qrcode-terminal'
 
 import { getResult } from './request.ts'
 
-import { testRule, rule2 } from './jobs/moyu.js'
-import schedule, {Job} from 'node-schedule'
-
+import { testRule, myb } from './jobs/moyu.js'
+import schedule, { Job } from 'node-schedule'
 
 // other
 
 function onScan(qrcode, status) {
   if (status === ScanStatus.Waiting || status === ScanStatus.Timeout) {
-    qrcodeTerminal.generate(qrcode, { small: true })  // show qrcode on console
+    qrcodeTerminal.generate(qrcode, { small: true }) // show qrcode on console
 
     const qrcodeImageUrl = [
       'https://wechaty.js.org/qrcode/',
       encodeURIComponent(qrcode),
     ].join('')
 
-    log.info('StarterBot', 'onScan: %s(%s) - %s', ScanStatus[status], status, qrcodeImageUrl)
-
+    log.info(
+      'StarterBot',
+      'onScan: %s(%s) - %s',
+      ScanStatus[status],
+      status,
+      qrcodeImageUrl
+    )
   } else {
     log.info('StarterBot', 'onScan: %s(%s)', ScanStatus[status], status)
   }
@@ -51,13 +54,9 @@ function onLogin(user) {
   //   room?.say(`早上好各位，我是你们的AI小助手！`)
   // })
 
-  schedule.scheduleJob('7 * * * *', async function() {
-    const room = await bot.Room.find('叮叮咚咚')
-    room?.say(`我是你们的AI小助手！(每小时的第7分钟发送一次)`)
-    // console.log(getMessage());
-  });
-
-
+  schedule.scheduleJob('5 * * * *', ()=> {
+    myb(bot)
+  })
 }
 
 function onLogout(user) {
@@ -78,6 +77,9 @@ async function onMessage(msg: Message) {
   if (metionSelf) {
     if (mentionText.trim() === '') {
       await msg.say(`${talker.name()}, 请输入你要问的问题`)
+      return
+    } else if(mentionText === '摸鱼办') {
+      await myb(bot)
       return
     }
     try {
@@ -106,12 +108,12 @@ const bot = WechatyBuilder.build({
   // puppet: 'wechaty-puppet-wechat',
 })
 
-
 bot.on('scan', onScan)
 bot.on('login', onLogin)
 bot.on('logout', onLogout)
 bot.on('message', onMessage)
 
-bot.start()
+bot
+  .start()
   .then(() => log.info('StarterBot', 'Starter Bot Started.'))
-  .catch(e => log.error('StarterBot', e))
+  .catch((e) => log.error('StarterBot', e))

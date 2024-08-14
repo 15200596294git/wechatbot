@@ -1,20 +1,59 @@
+// @ts-nocheck
 import schedule from 'node-schedule'
+import ChineseHolidays from 'chinese-holidays'
+import { nextSunday,isAfter, differenceInDays, nextFriday, differenceInHours, differenceInMilliseconds, differenceInMinutes } from 'date-fns'
 
-const date = new Date()
+export async function moyu() {
+  const now = new Date()
+  let ret
+  try {
+    ret = await ChineseHolidays.ready()
+  } catch (error) {
+    return null
+  }
+  
 
-// 每天00:00执行
-// const rule = new schedule.RecurrenceRule()
-// rule.hour = 0
-// rule.minute = 0
-// rule.second = 0
+  // console.log("🚀 ~ moyu ~ ret:", ret.all())
+  const afterDate = ret.all().filter(d=> {
+    const start_date = d.range[0]
+    return isAfter(new Date(start_date), now)
+  })
 
-// 每天9:30执行
-const rule2 = new schedule.RecurrenceRule()
-rule2.hour = 8.7
-// rule.minute = 0
-// rule.second = 0
+  const afterDay = afterDate[0]
+  const holidayDis = differenceInDays(afterDay.range[0], now)
+  console.log(`距离下一个节假日放假${afterDay.name},还有${holidayDis}天!`)
+
+  // 距离周五还有几天
+  const dayDis = differenceInDays(nextFriday(now) , now)
+  console.log(`距离下一个周五还有${dayDis}天！`);
+  
+  // 距离今天下班
+  const hourDis = differenceInHours()
+  const minDis = differenceInMinutes()
+  // const
+}
+
+export async function myb(bot) {
+  const fishTextArray = [
+    '工作只是一种状态，摸鱼才是真正的生活方式。',
+    '今天的目标：保持高效，顺便摸个鱼。',
+    '工作再忙，也要给自己留点摸鱼的时间。',
+    '我的工作技能：高效处理任务+摸鱼精通。',
+    '保持生产力的秘密？合理的摸鱼时间。',
+  ]
+
+  function getRandomFishText() {
+    const randomIndex = Math.floor(Math.random() * fishTextArray.length)
+    return fishTextArray[randomIndex]
+  }
+  const room = await bot?.Room?.find('叮叮咚咚')
+  room?.say(`${getRandomFishText()}---摸鱼办!`)
+  // console.log(getMessage());
+}
 
 
+
+moyu()
 
 // const job = schedule.scheduleJob(rule, ()=> {})
 
@@ -30,6 +69,5 @@ testRule.minute = 30
 
 export {
   testRule,
-  rule2
 }
 
