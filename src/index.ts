@@ -7,7 +7,7 @@ import qrcodeTerminal from 'qrcode-terminal'
 import { getResult } from './request.ts'
 
 import { testRule, rule2 } from './jobs/moyu.js'
-import schedule from 'node-schedule'
+import schedule, {Job} from 'node-schedule'
 
 
 // other
@@ -28,6 +28,7 @@ function onScan(qrcode, status) {
   }
 }
 
+let job1: Job
 function onLogin(user) {
   log.info('StarterBot', '%s login', user)
 
@@ -44,7 +45,8 @@ function onLogin(user) {
   //   room?.say(`早上好各位，我是你们的AI小助手！`)
   // })
 
-  schedule.scheduleJob(rule2, async () => {
+  if(job1) job1.cancel()
+  job1 = schedule.scheduleJob(rule2, async () => {
     const room = await bot.Room.find('叮叮咚咚')
     room?.say(`早上好各位，我是你们的AI小助手！`)
   })
