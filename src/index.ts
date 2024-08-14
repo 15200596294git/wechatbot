@@ -51,6 +51,13 @@ function onLogin(user) {
   //   room?.say(`早上好各位，我是你们的AI小助手！`)
   // })
 
+  schedule.scheduleJob('7 * * * *', function() {
+    const room = await bot.Room.find('叮叮咚咚')
+    room?.say(`我是你们的AI小助手！(每小时的第7分钟发送一次)`)
+    // console.log(getMessage());
+  });
+
+
 }
 
 function onLogout(user) {
