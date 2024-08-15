@@ -158,7 +158,7 @@ export async function fish() {
   )
   const h = differenceInHours(currentDateAtSixPM, now)
   const m = differenceInMinutes(currentDateAtSixPM, now) % 60
-  return m > 0 ? `${getRandomFish()}` : '已下班!\n'
+  return m > 0 ? `${getRandomFish()}\n` : '已下班!\n'
 }
 
 export async function drinkWater() {
