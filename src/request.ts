@@ -35,5 +35,3 @@ export const getResult = async (ques: string) => {
   return json.data.result
 };
 
-
-// console.log(await getResult('早上好'));
