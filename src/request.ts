@@ -26,8 +26,6 @@ export const getResult = async (ques: string) => {
 
   const json = await res.json() as ResData
 
-  // console.log(JSON.stringify(json))
-
   if(json.code !== 0) {
     return json.msg
   }
