@@ -1,14 +1,11 @@
 // @ts-nocheck
 import { WechatyBuilder, ScanStatus, log, Message } from 'wechaty'
-
 import qrcodeTerminal from 'qrcode-terminal'
-
 import { getResult } from './request.ts'
-
-import { fish, holiday, overtime, drinkWater } from './jobs/moyu.js'
 import schedule from 'node-schedule'
 
-// other
+import { fish, holiday, overtime, drinkWater } from './general/moyu.js'
+import { WECHAT_GROUPS } from './config/global.ts'
 
 function onScan(qrcode, status) {
   if (status === ScanStatus.Waiting || status === ScanStatus.Timeout) {
@@ -34,19 +31,16 @@ function onScan(qrcode, status) {
 function onLogin(user) {
   log.info('StarterBot', '%s login', user)
 
-  // 测试群 叮叮咚咚
-  // ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴
-
 
   // 摸鱼+下班提醒 1小时一次， 12:00-14:00不提醒
-  schedule.scheduleJob('0 0 9-12,14-18 * * ?', async() => {
+  schedule.scheduleJob('0 9-12,14-18 * * 1-5', async() => {
     const room = await bot?.Room?.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
     let texts = await Promise.all([fish(), overtime()])
     room?.say(texts.join(''))
   })
 
-  // 喝水提醒30分钟一次，12:00-14:00不提醒
-  schedule.scheduleJob('0 0/30 9-12,14-18 * * ?', async() => {
+  // 喝水提醒1h，12:00-14:00不提醒
+  schedule.scheduleJob('0 9-12,14-18/1 * * 1-5', async() => {
     const room = await bot?.Room?.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
     let texts = await Promise.all([drinkWater()])
     room?.say(texts.join(''))
