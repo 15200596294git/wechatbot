@@ -9,19 +9,30 @@ import {
 } from 'date-fns'
 import { Wechaty } from 'wechaty'
 import { isHoliday, isWorkingday, nextHoliday } from '../utils/date.js'
+import { createRandomSelector } from '../utils/common.ts'
+import { MORNING_MESSAGES, FISH_MESSAGES, WATER_MESSAGES, ORDER_MESSAGES } from './constant.ts'
 
 
-
-function createRandomSelector(array) {
-  return function () {
-    const randomIndex = Math.floor(Math.random() * array.length)
-    return array[randomIndex]
-  }
+export function morningText() {
+  const sayMorning = createRandomSelector(MORNING_MESSAGES)
+  return sayMorning()
 }
 
-const getRandomFish = createRandomSelector(fishTextArray)
-const getRandomWater = createRandomSelector(drinkWaterMessages)
+export function fishText() {
+  const fish = createRandomSelector(FISH_MESSAGES)
+  return fish()
+}
 
+export function waterText() {
+  const water = createRandomSelector(WATER_MESSAGES)
+  return water()
+}
+
+// 外卖
+export function orderText() {
+  const o = createRandomSelector(ORDER_MESSAGES)
+  return o()
+}
 
 // 下班倒计时
 export function workdayCountdown() {
@@ -46,34 +57,7 @@ export function workdayCountdown() {
   }
 }
 
-// 摸鱼文本
-export async function fish() {
-  // 节假日，直接返回
-  if (await isHoliday()) return ''
-  const now = new Date()
 
-  // 下班时间
-  const currentDateAtSixPM = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    18,
-    0,
-    0,
-    0
-  )
-  const h = differenceInHours(currentDateAtSixPM, now)
-  const m = differenceInMinutes(currentDateAtSixPM, now) % 60
-  return m > 0 ? `${getRandomFish()}\n` : '已下班!\n'
-}
-
-export async function drinkWater() {
-  // 节假日，直接返回
-  if (await isHoliday()) return ''
-  const now = new Date()
-
-  return `${getRandomWater()}\n`
-}
 
 // 节假日
 export async function holiday() {
@@ -95,7 +79,7 @@ export async function holiday() {
   const { holidayName, date } = await nextHoliday()
   const holidayDis = differenceInDays(date, now)
 
-  const holidayText = `距离${holidayName},还有${holidayDis}天!\n`
+  const holidayText = `距离${holidayName},还有${holidayDis}天!`
 
   const h = differenceInHours(currentDateAtSixPM, now)
   const m = differenceInMinutes(currentDateAtSixPM, now) % 60
