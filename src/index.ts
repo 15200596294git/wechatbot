@@ -4,8 +4,9 @@ import qrcodeTerminal from 'qrcode-terminal'
 import { getResult } from './request.ts'
 import schedule from 'node-schedule'
 
-import { fish, holiday, overtime, drinkWater } from './general/moyu.js'
-import { WECHAT_GROUPS } from './config/global.ts'
+import { holiday, overtime, drinkWater, waterText, fishText, workdayCountdown, orderText } from './general/moyu.ts'
+import { moring, order, fish, groupSend } from './general/timer.ts'
+import { isWithinInterval, startOfDay, endOfDay, getHours, set } from 'date-fns';
 
 function onScan(qrcode, status) {
   if (status === ScanStatus.Waiting || status === ScanStatus.Timeout) {
@@ -32,19 +33,25 @@ function onLogin(user) {
   log.info('StarterBot', '%s login', user)
 
 
-  // 摸鱼+下班提醒 1小时一次， 12:00-14:00不提醒
-  schedule.scheduleJob('0 9-12,14-18 * * 1-5', async() => {
-    const room = await bot?.Room?.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
-    let texts = await Promise.all([fish(), overtime()])
-    room?.say(texts.join(''))
-  })
 
-  // 喝水提醒1h，12:00-14:00不提醒
-  schedule.scheduleJob('0 9-12,14-18/1 * * 1-5', async() => {
-    const room = await bot?.Room?.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
-    let texts = await Promise.all([drinkWater()])
-    room?.say(texts.join(''))
-  })
+  moring(bot)
+  fish(bot)
+  order(bot)
+
+
+  // 摸鱼+下班提醒 1小时一次， 12:00-14:00不提醒
+  //   schedule.scheduleJob('0 9-12,14-18 * * 1-5', async() => {
+  //     const room = await bot?.Room?.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
+  //     let texts = await Promise.all([fish(), overtime()])
+  //     room?.say(texts.join(''))
+  //   })
+
+  //   // 喝水提醒1h，12:00-14:00不提醒
+  //   schedule.scheduleJob('0 9-12,14-18/1 * * 1-5', async() => {
+  //     const room = await bot?.Room?.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
+  //     let texts = await Promise.all([drinkWater()])
+  //     room?.say(texts.join(''))
+  //   })
 }
 
 function onLogout(user) {
@@ -57,9 +64,7 @@ async function onMessage(msg: Message) {
   const metionSelf = await msg.mentionSelf()
   const mentionText = await msg.mentionText()
 
-  // 测试群 叮叮咚咚
-  // ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴
-  const room = await bot?.Room?.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
+  // const room = await bot?.Room?.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
 
   const talker = msg.talker()
   if (metionSelf) {
@@ -67,19 +72,37 @@ async function onMessage(msg: Message) {
       await msg.say(`${talker.name()}, 请输入你要问的问题`)
       return
     } else if (mentionText === '摸鱼办') {
-      let texts = await Promise.all([fish(), overtime()])
-      texts = texts.filter((t) => t !== '已下班!\n')
-      if (!texts.length) {
-        room?.say(`现在是下班时间，请上班时间再摸鱼哦！`)
+
+      // 获取当前时间
+      const now = new Date();
+
+      // 设置时间区间的开始和结束
+      const startTime = set(now, { hours: 9, minutes: 0, seconds: 0 });
+      const endTime = set(now, { hours: 18, minutes: 0, seconds: 0 });
+
+      // 检查当前时间是否在 9 点到 18 点之间
+      const isInWorkingHours = isWithinInterval(now, { start: startTime, end: endTime });
+      if (!isInWorkingHours) {
+        // groupSend(bot, `现在是下班时间，请上班时间再摸鱼哦！`)
+        msg.say('现在是下班时间，请上班时间再摸鱼哦！')
       } else {
-        room?.say(texts.join(''))
+
+        const { hour, minute } = workdayCountdown()
+        let text = [fishText(), waterText()].join('\n')
+        if (hour < 4) {
+          text += `\n距离18:00下班还有${hour}小时，${minute}分钟`
+        }
+        msg.say(text)
+        // groupSend(bot, text)
       }
       return
     } else if (mentionText === '喝水办') {
-      room?.say(await drinkWater())
+      msg.say(waterText())
+      // groupSend(bot, waterText())
       return
     } else if (mentionText === '假日办') {
-      room?.say(await holiday())
+      msg.say(await holiday())
+      // groupSend(bot, await holiday())
       return
     }
     try {
