@@ -47,7 +47,9 @@ export function fish(bot: Wechaty) {
 export function order(bot: Wechaty) {
   let job:Job
   const startJob = ()=> {
-    job = schedule.scheduleJob('*/10 11 * * 1-5', ()=> {
+    let cron = '11 0-30 * * *';
+    // let cron = '*/10 11 * * 1-5';
+    job = schedule.scheduleJob(cron, ()=> {
 
       groupSend(bot, orderText())
   
