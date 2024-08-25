@@ -89,10 +89,11 @@ async function onMessage(msg: Message) {
       // groupSend(bot, await holiday())
       return
     } else if(mentionText === '豪哥酒驾') {
-      msg.say('小蟹提醒豪哥:/n' + drinkingText())
+      msg.say('小蟹提醒豪哥:\n' + drinkingText())
       return 
     } else if(mentionText === '豪哥逆行') {
-      msg.say('小蟹提醒豪哥:/n' + reverseDrivingText())
+      msg.say('小蟹提醒豪哥:\n' + reverseDrivingText())
+      return
     }
     try {
       const result = await getResult(mentionText)
