@@ -4,7 +4,7 @@ import qrcodeTerminal from 'qrcode-terminal'
 import { getResult } from './request.ts'
 import schedule from 'node-schedule'
 
-import { holiday, overtime, drinkWater, waterText, fishText, workdayCountdown, orderText } from './general/moyu.ts'
+import { holiday, overtime, drinkWater, waterText, fishText, workdayCountdown, orderText, drinkingText, reverseDrivingText } from './general/moyu.ts'
 import { moring, order, fish, groupSend } from './general/timer.ts'
 import { isWithinInterval, startOfDay, endOfDay, getHours, set } from 'date-fns';
 
@@ -32,26 +32,10 @@ function onScan(qrcode, status) {
 function onLogin(user) {
   log.info('StarterBot', '%s login', user)
 
-
-
   moring(bot)
   fish(bot)
   order(bot)
 
-
-  // 摸鱼+下班提醒 1小时一次， 12:00-14:00不提醒
-  //   schedule.scheduleJob('0 9-12,14-18 * * 1-5', async() => {
-  //     const room = await bot?.Room?.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
-  //     let texts = await Promise.all([fish(), overtime()])
-  //     room?.say(texts.join(''))
-  //   })
-
-  //   // 喝水提醒1h，12:00-14:00不提醒
-  //   schedule.scheduleJob('0 9-12,14-18/1 * * 1-5', async() => {
-  //     const room = await bot?.Room?.find('ᑋᵉᑊᑊᵒ ᵕ̈ ²⁰²⁴')
-  //     let texts = await Promise.all([drinkWater()])
-  //     room?.say(texts.join(''))
-  //   })
 }
 
 function onLogout(user) {
@@ -104,6 +88,11 @@ async function onMessage(msg: Message) {
       msg.say(await holiday())
       // groupSend(bot, await holiday())
       return
+    } else if(mentionText === '豪哥酒驾') {
+      msg.say('小蟹提醒豪哥:/n' + drinkingText())
+      return 
+    } else if(mentionText === '豪哥逆行') {
+      msg.say('小蟹提醒豪哥:/n' + reverseDrivingText())
     }
     try {
       const result = await getResult(mentionText)
