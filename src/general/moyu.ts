@@ -10,7 +10,7 @@ import {
 import { Wechaty } from 'wechaty'
 import { isHoliday, isWorkingday, nextHoliday } from '../utils/date.js'
 import { createRandomSelector } from '../utils/common.ts'
-import { MORNING_MESSAGES, FISH_MESSAGES, WATER_MESSAGES, ORDER_MESSAGES } from './constant.ts'
+import { MORNING_MESSAGES, FISH_MESSAGES, WATER_MESSAGES, ORDER_MESSAGES, DRINKING_MESSAGES, REVERSE_DRIVING_MESSAGES } from './constant.ts'
 
 
 export function morningText() {
@@ -32,6 +32,20 @@ export function waterText() {
 export function orderText() {
   const o = createRandomSelector(ORDER_MESSAGES)
   return o()
+}
+
+// 不要酒驾
+export function drinkingText() {
+  return createRandomSelector(DRINKING_MESSAGES)()
+}
+// drinkingText()
+// console.log("🚀 ~ drinkingText():", drinkingText())
+
+// reverseDrivingText()
+// console.log("🚀 ~ reverseDrivingText():", reverseDrivingText())
+// 不要逆行
+export function reverseDrivingText() {
+  return createRandomSelector(REVERSE_DRIVING_MESSAGES)()
 }
 
 // 下班倒计时
