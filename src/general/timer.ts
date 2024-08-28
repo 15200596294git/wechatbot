@@ -1,7 +1,7 @@
 // 定义定时任务
 import schedule, { Job } from 'node-schedule'
 
-import { workdayCountdown, morningText, fishText, waterText, orderText, drinkingText, reverseDrivingText } from './moyu.js'
+import { workdayCountdown, morningText, fishText, waterText, orderText, drinkingText, reverseDrivingText, offWorkText } from './moyu.js'
 import { Wechaty } from 'wechaty'
 import { WECHAT_GROUPS } from '../config/global.js'
 
@@ -62,6 +62,13 @@ export function order(bot: Wechaty) {
 
   schedule.scheduleJob('30 11 * * *', ()=> {
     stopJob()
+  })
+}
+
+// 下班
+export function getOffWork(bot: Wechaty) {
+  schedule.scheduleJob('0 18 * * 1-5', async () => {
+    groupSend(bot, offWorkText())
   })
 }
 

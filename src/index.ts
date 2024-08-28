@@ -4,8 +4,8 @@ import qrcodeTerminal from 'qrcode-terminal'
 import { getResult } from './request.ts'
 import schedule from 'node-schedule'
 
-import { holiday, overtime, drinkWater, waterText, fishText, workdayCountdown, orderText, drinkingText, reverseDrivingText } from './general/moyu.ts'
-import { moring, order, fish, groupSend } from './general/timer.ts'
+import { holiday, overtime, drinkWater, waterText, fishText, workdayCountdown, orderText, drinkingText, reverseDrivingText, offWorkText } from './general/moyu.ts'
+import { moring, order, fish, groupSend, haoNoDrinking, haoNoReverseDriving } from './general/timer.ts'
 import { isWithinInterval, startOfDay, endOfDay, getHours, set } from 'date-fns';
 
 function onScan(qrcode, status) {
@@ -35,6 +35,8 @@ function onLogin(user) {
   moring(bot)
   fish(bot)
   order(bot)
+  haoNoDrinking()
+  haoNoReverseDriving()
 
 }
 
@@ -93,6 +95,9 @@ async function onMessage(msg: Message) {
       return 
     } else if(mentionText === '豪哥逆行') {
       msg.say('小蟹提醒豪哥:\n' + reverseDrivingText())
+      return
+    } else if(mentionText === '下班测试') {
+      msg.say(await offWorkText())
       return
     }
     try {
