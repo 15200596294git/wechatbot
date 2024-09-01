@@ -35,8 +35,8 @@ function onLogin(user) {
   moring(bot)
   fish(bot)
   order(bot)
-  haoNoDrinking()
-  haoNoReverseDriving()
+  haoNoDrinking(bot)
+  haoNoReverseDriving(bot)
 
 }
 
