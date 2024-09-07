@@ -5,7 +5,7 @@ import { getResult } from '../request.ts'
 import schedule from 'node-schedule'
 
 import { holiday, overtime, drinkWater, waterText, fishText, workdayCountdown, orderText, drinkingText, reverseDrivingText, offWorkText } from '../general/moyu.ts'
-import { moring, order, fish, groupSend, haoNoDrinking, haoNoReverseDriving } from '../general/timer.ts'
+import { moring, order, fish, groupSend, haoNoDrinking, haoNoReverseDriving, logout } from '../general/timer.ts'
 import { isWithinInterval, startOfDay, endOfDay, getHours, set } from 'date-fns';
 
 function onScan(qrcode, status) {
@@ -37,6 +37,7 @@ function onLogin(user) {
   order(bot)
   haoNoDrinking()
   haoNoReverseDriving()
+  logout(bot)
 
 }
 
@@ -109,7 +110,8 @@ async function onMessage(msg: Message) {
   }
 }
 
-export function startBot(cb) {
+export function startBot(cb: (url: string)=> void) {
+
 
   const bot = WechatyBuilder.build({
     // name: 'ding-dong-bot',
@@ -125,7 +127,7 @@ export function startBot(cb) {
      *  - wechaty-puppet-service (token required, see: <https://wechaty.js.org/docs/puppet-services>)
      *  - etc. see: <https://github.com/wechaty/wechaty-puppet/wiki/Directory>
      */
-    puppet: 'wechaty-puppet-wechat4u',
+    // puppet: 'wechaty-puppet-wechat4u',
   })
   
   bot.on('scan', (qrcode, status)=> {
@@ -143,7 +145,10 @@ export function startBot(cb) {
   
   bot
   .start()
-  .then(() => log.info('StarterBot', 'Starter Bot Started.'))
-  .catch((e) => log.error('StarterBot', e))
+  // .then(() => log.info('StarterBot', 'Starter Bot Started.'))
+  // .catch((e) => log.error('StarterBot', e))
 }
 
+// startBot((url)=> {
+//   console.log("🚀 ~ startBot ~ url:", url)
+// })
