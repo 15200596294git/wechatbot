@@ -3,6 +3,7 @@ import { WechatyBuilder, ScanStatus, log, Message } from 'wechaty'
 import qrcodeTerminal from 'qrcode-terminal'
 import { getResult } from '../request.ts'
 import schedule from 'node-schedule'
+import QRCode from 'qrcode'
 
 import { holiday, overtime, drinkWater, waterText, fishText, workdayCountdown, orderText, drinkingText, reverseDrivingText, offWorkText } from '../general/moyu.ts'
 import { moring, order, fish, groupSend, haoNoDrinking, haoNoReverseDriving, logout } from '../general/timer.ts'
@@ -114,7 +115,7 @@ export function startBot(cb: (url: string)=> void) {
 
 
   const bot = WechatyBuilder.build({
-    // name: 'ding-dong-bot',
+    // name: 'ding-dong-bot2',
     /**
      * How to set Wechaty Puppet Provider:
      *
@@ -127,16 +128,19 @@ export function startBot(cb: (url: string)=> void) {
      *  - wechaty-puppet-service (token required, see: <https://wechaty.js.org/docs/puppet-services>)
      *  - etc. see: <https://github.com/wechaty/wechaty-puppet/wiki/Directory>
      */
-    // puppet: 'wechaty-puppet-wechat4u',
+    puppet: 'wechaty-puppet-wechat4u',
   })
   
   bot.on('scan', (qrcode, status)=> {
-    const qrcodeImageUrl = [
-      'https://wechaty.js.org/qrcode/',
-      encodeURIComponent(qrcode),
-    ].join('')
-    cb(qrcodeImageUrl)
+    // const qrcodeImageUrl = [
+    //   'https://wechaty.js.org/qrcode/',
+    //   encodeURIComponent(qrcode),
+    // ].join('')
 
+    QRCode.toDataURL(qrcode, { type: 'image/jpeg', errorCorrectionLevel: 'H', scale: 8 }, (err, url)=> {
+      // console.log("🚀 ~ QRCode.toDataURL ~ url:", url)
+      cb(url)
+    })
     onScan(qrcode, status)
   })
   bot.on('login', onLogin)
@@ -152,3 +156,5 @@ export function startBot(cb: (url: string)=> void) {
 // startBot((url)=> {
 //   console.log("🚀 ~ startBot ~ url:", url)
 // })
+
+

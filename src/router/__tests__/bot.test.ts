@@ -16,7 +16,7 @@ describe('获取微信登录二维码', () => {
     return request(app)
       .get('/startBot')
       .then(response => {
-        expect(response.body.data.includes('https://wechaty.js.org/qrcode')).toBeTruthy()
+        expect(response.body.data.includes('data:image/png')).toBeTruthy()
       })
   })
 
