@@ -8,7 +8,7 @@ import {
   nextSaturday,
 } from 'date-fns'
 import { Wechaty } from 'wechaty'
-import { isHoliday, isWorkingday, nextHoliday } from '../utils/date.js'
+import { isHoliday, isWorkingday, nextHoliday } from '../utils/date.ts'
 import { createRandomSelector } from '../utils/common.ts'
 import { MORNING_MESSAGES, FISH_MESSAGES, WATER_MESSAGES, ORDER_MESSAGES, DRINKING_MESSAGES, REVERSE_DRIVING_MESSAGES, GET_OFF_WORK_MESSAGES } from './constant.ts'
 
@@ -106,5 +106,4 @@ export async function holiday() {
   // return overtimeText = m > 0 ? `${holidayText}` : ''
   return `${holidayText}`
 }
-
 

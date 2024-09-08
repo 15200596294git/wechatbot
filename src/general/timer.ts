@@ -1,9 +1,9 @@
 // 定义定时任务
 import schedule, { Job } from 'node-schedule'
 
-import { workdayCountdown, morningText, fishText, waterText, orderText, drinkingText, reverseDrivingText, offWorkText } from './moyu.js'
+import { workdayCountdown, morningText, fishText, waterText, orderText, drinkingText, reverseDrivingText, offWorkText } from './moyu.ts'
 import { Wechaty } from 'wechaty'
-import { WECHAT_GROUPS } from '../config/global.js'
+import { WECHAT_GROUPS } from '../config/global.ts'
 
 function groupsAssiatant(groups: typeof WECHAT_GROUPS) {
   return function(bot: Wechaty, text: string) {
@@ -85,5 +85,12 @@ export function haoNoReverseDriving(bot:Wechaty) {
   schedule.scheduleJob('0 18 * * 1-5', ()=> {
     bot.Room.find(WECHAT_GROUPS.faimly)
     .then(room=> room?.say('小蟹提醒豪哥:/n' + reverseDrivingText()))
+  })
+}
+
+// 每天晚上12点注销机器人
+export async function logout(bot: Wechaty) {
+  schedule.scheduleJob('0 0 * * *', ()=> {
+    bot.logout()
   })
 }
