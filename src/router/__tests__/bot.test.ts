@@ -14,7 +14,7 @@ describe('获取微信登录二维码', () => {
 
   it('response with json', () => {
     return request(app)
-      .get('/startBot')
+      .get('api/startBot')
       .then(response => {
         expect(response.body.data.includes('data:image/png')).toBeTruthy()
       })

@@ -5,7 +5,7 @@ import { startBot } from '../bot'
 const router = express.Router()
 
 
-router.get('/startBot', (req, res)=> {
+router.get('/api/startBot', (req, res)=> {
   // res.json(
   //   responseJson.success('jg')
   // )
