@@ -33,12 +33,12 @@ function onScan(qrcode, status) {
 function onLogin(user) {
   log.info('StarterBot', '%s login', user)
 
-  moring(bot)
-  fish(bot)
-  order(bot)
-  haoNoDrinking(bot)
-  haoNoReverseDriving(bot)
-  logout(bot)
+  moring(user)
+  fish(user)
+  order(user)
+  haoNoDrinking(user)
+  haoNoReverseDriving(user)
+  logout(user)
 
 }
 
@@ -153,8 +153,8 @@ export function startBot(cb: (url: string)=> void) {
   // .catch((e) => log.error('StarterBot', e))
 }
 
-// startBot((url)=> {
-//   console.log("🚀 ~ startBot ~ url:", url)
-// })
+startBot((url)=> {
+  // console.log("🚀 ~ startBot ~ url:", url)
+})
 
 
