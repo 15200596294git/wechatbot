@@ -153,8 +153,8 @@ export function startBot(cb: (url: string)=> void) {
   // .catch((e) => log.error('StarterBot', e))
 }
 
-startBot((url)=> {
-  // console.log("🚀 ~ startBot ~ url:", url)
-})
+// startBot((url)=> {
+//   // console.log("🚀 ~ startBot ~ url:", url)
+// })
 
 
