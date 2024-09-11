@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { WechatyBuilder, ScanStatus, log, Message } from 'wechaty'
+import { WechatyBuilder, ScanStatus, log, Message, Wechaty } from 'wechaty'
 import qrcodeTerminal from 'qrcode-terminal'
 import { getResult } from '../request.ts'
 import schedule from 'node-schedule'
@@ -30,15 +30,15 @@ function onScan(qrcode, status) {
   }
 }
 
-function onLogin(user) {
-  log.info('StarterBot', '%s login', user)
+function onLogin(bot: Wechaty) {
+  log.info('StarterBot', '%s login', bot)
 
-  moring(user)
-  fish(user)
-  order(user)
-  haoNoDrinking(user)
-  haoNoReverseDriving(user)
-  logout(user)
+  moring(bot)
+  fish(bot)
+  order(bot)
+  haoNoDrinking(bot)
+  haoNoReverseDriving(bot)
+  logout(bot)
 
 }
 
@@ -143,7 +143,7 @@ export function startBot(cb: (url: string)=> void) {
     })
     onScan(qrcode, status)
   })
-  bot.on('login', onLogin)
+  bot.on('login', ()=> onLogin(bot))
   bot.on('logout', onLogout)
   bot.on('message', onMessage)
   
