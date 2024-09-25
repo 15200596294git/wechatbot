@@ -111,11 +111,11 @@ async function onMessage(msg: Message) {
   }
 }
 
+/** 启动机器人 */
 export function startBot(cb: (url: string)=> void) {
 
 
   const bot = WechatyBuilder.build({
-    // name: 'ding-dong-bot2',
     /**
      * How to set Wechaty Puppet Provider:
      *
