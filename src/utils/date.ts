@@ -2,7 +2,7 @@
 import ChineseHolidays from 'chinese-holidays'
 
 const options = {
-  offline: true
+  // offline: true
 }
 
 export async function isWorkingday(x: Date) {
@@ -21,8 +21,13 @@ export async function nextHoliday() {
   const book = await ChineseHolidays.ready(options)
   const holidays = book.all()
 
+  console.log("🚀 ~ nextHoliday ~ holidays:", holidays)
+
+
   // @ts-ignore
   const idx = holidays.findIndex((d) => new Date(d.range[0]) > now)
+  if(idx === -1) return null
+
   return {
     holidayName: holidays[idx].name,
     date: new Date(holidays[idx].range[0])
