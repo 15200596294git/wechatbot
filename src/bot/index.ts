@@ -154,7 +154,7 @@ export function startBot(cb: (url: string)=> void) {
 }
 
 // startBot((url)=> {
-//   // console.log("🚀 ~ startBot ~ url:", url)
+  // console.log("🚀 ~ startBot ~ url:", url)
 // })
 
 

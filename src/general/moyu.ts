@@ -96,7 +96,12 @@ export async function holiday() {
     0
   )
 
-  const { holidayName, date } = await nextHoliday()
+  const holidayData = await nextHoliday()
+  if(!holidayData) {
+    return '很遗憾，今年暂无更多放假的节日!'
+  }
+
+  const { holidayName, date } = holidayData
   const holidayDis = differenceInDays(date, now)
 
   const holidayText = `距离${holidayName},还有${holidayDis}天!`
