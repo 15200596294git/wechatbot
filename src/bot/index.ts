@@ -45,6 +45,7 @@ export function startBotAndReturnScanQRCode() {
 
     bot.on('scan', (qrcode, status) => {
       resolve(qrcodeToImage(qrcode))
+      onScan(qrcode, status)
     })
 
     bot.on('login', ()=> onLogin(bot))
@@ -54,30 +55,28 @@ export function startBotAndReturnScanQRCode() {
   })
 }
 
-// startBot((url)=> {
-// console.log("🚀 ~ startBot ~ url:", url)
-// })
+// startBotAndReturnScanQRCode()
 
-// function onScan(qrcode, status) {
-//   if (status === ScanStatus.Waiting || status === ScanStatus.Timeout) {
-//     qrcodeTerminal.generate(qrcode, { small: true }) // show qrcode on console
+function onScan(qrcode, status) {
+  if (status === ScanStatus.Waiting || status === ScanStatus.Timeout) {
+    qrcodeTerminal.generate(qrcode, { small: true }) // show qrcode on console
 
-//     const qrcodeImageUrl = [
-//       'https://wechaty.js.org/qrcode/',
-//       encodeURIComponent(qrcode),
-//     ].join('')
+    const qrcodeImageUrl = [
+      'https://wechaty.js.org/qrcode/',
+      encodeURIComponent(qrcode),
+    ].join('')
 
-//     log.info(
-//       'StarterBot',
-//       'onScan: %s(%s) - %s',
-//       ScanStatus[status],
-//       status,
-//       qrcodeImageUrl
-//     )
-//   } else {
-//     log.info('StarterBot', 'onScan: %s(%s)', ScanStatus[status], status)
-//   }
-// }
+    log.info(
+      'StarterBot',
+      'onScan: %s(%s) - %s',
+      ScanStatus[status],
+      status,
+      qrcodeImageUrl
+    )
+  } else {
+    log.info('StarterBot', 'onScan: %s(%s)', ScanStatus[status], status)
+  }
+}
 
 function onLogin(bot: Wechaty) {
   moring(bot)
