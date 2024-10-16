@@ -51,3 +51,12 @@ export async function playboyQuotesApi() {
   const content = resJson.result.content
   return content
 }
+
+export async function simpDiaryApi() {
+  const url = `https://whyta.cn/api/tx/tiangou?key=${APP_KEY}`
+  
+  const res = await fetch(url)
+  const resJson = await res.json()
+  const content = resJson.result.content
+  return content
+}
