@@ -68,3 +68,17 @@ export async function lewdTalkApi() {
   // console.log("🚀 ~ lewdTalkApi ~ res:", text)
   return text
 }
+
+export async function slackOffCalendarApi() {
+  const url = 'https://api.vvhan.com/api/moyu?type=json'
+  const res = await fetch(url)
+  const resJson = await res.json()
+  return resJson.url
+}
+
+export async function bonusWomanApi() {
+  const url = 'https://api.vvhan.com/api/wallpaper/mobileGirl?type=json'
+  const res = await fetch(url)
+  const resJson = await res.json()
+  return resJson.url
+}
