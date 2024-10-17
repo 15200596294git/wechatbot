@@ -1,6 +1,6 @@
 import { WechatyBuilder, ScanStatus, log, Message, Wechaty } from 'wechaty'
 import qrcodeTerminal from 'qrcode-terminal'
-import { getResult, DailySentenceApi, playboyQuotesApi, simpDiaryApi, lewdTalkApi } from '../request.ts'
+import { getResult, DailySentenceApi, playboyQuotesApi, simpDiaryApi, lewdTalkApi, slackOffCalendarApi, bonusWomanApi } from '../request.ts'
 import schedule from 'node-schedule'
 import QRCode from 'qrcode'
 import { promisify } from 'node:util'
@@ -27,6 +27,7 @@ import {
   logout,
 } from '../general/timer.ts'
 import { isWithinInterval, startOfDay, endOfDay, getHours, set } from 'date-fns'
+import { FileBox } from 'file-box'
 
 const qrcodeToImage = (qrcode: string) => {
   return QRCode.toDataURL(qrcode, {
@@ -55,7 +56,7 @@ export function startBotAndReturnScanQRCode() {
   })
 }
 
-// startBotAndReturnScanQRCode()
+startBotAndReturnScanQRCode()
 
 function onScan(qrcode, status) {
   if (status === ScanStatus.Waiting || status === ScanStatus.Timeout) {
@@ -159,7 +160,16 @@ async function onMessage(msg: Message) {
     } else if(mentionText === '骚话')  {
       msg.say(await lewdTalkApi())
       return
+    } else if(mentionText === '摸鱼人日历') {
+      const fileBox = FileBox.fromUrl(await slackOffCalendarApi())
+      msg.say(fileBox)
+      return
+    } else if(mentionText === '福利姬') {
+      const fileBox = FileBox.fromUrl(await bonusWomanApi())
+      msg.say(fileBox)
+      return
     }
+    
       
     try {
       const result = await getResult(mentionText)
