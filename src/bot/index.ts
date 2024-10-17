@@ -1,6 +1,6 @@
 import { WechatyBuilder, ScanStatus, log, Message, Wechaty } from 'wechaty'
 import qrcodeTerminal from 'qrcode-terminal'
-import { getResult, DailySentenceApi, playboyQuotesApi, simpDiaryApi } from '../request.ts'
+import { getResult, DailySentenceApi, playboyQuotesApi, simpDiaryApi, lewdTalkApi } from '../request.ts'
 import schedule from 'node-schedule'
 import QRCode from 'qrcode'
 import { promisify } from 'node:util'
@@ -155,6 +155,9 @@ async function onMessage(msg: Message) {
       return
     } else if(mentionText === '舔狗日记') {
       msg.say(await simpDiaryApi())
+      return
+    } else if(mentionText === '骚话')  {
+      msg.say(await lewdTalkApi())
       return
     }
       

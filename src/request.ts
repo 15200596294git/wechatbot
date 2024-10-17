@@ -60,3 +60,11 @@ export async function simpDiaryApi() {
   const content = resJson.result.content
   return content
 }
+
+export async function lewdTalkApi() {
+  const url = 'https://api.vvhan.com/api/text/sexy'
+  const res = await fetch(url)
+  const text  = await res.text()
+  // console.log("🚀 ~ lewdTalkApi ~ res:", text)
+  return text
+}
