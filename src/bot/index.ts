@@ -41,7 +41,7 @@ const qrcodeToImage = (qrcode: string) => {
 export function startBotAndReturnScanQRCode() {
   return new Promise((resolve, reject) => {
     const bot = WechatyBuilder.build({
-      puppet: 'wechaty-puppet-wechat4u',
+      // puppet: 'wechaty-puppet-wechat4u',
     })
 
     bot.on('scan', (qrcode, status) => {
