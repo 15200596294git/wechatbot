@@ -33,3 +33,30 @@ export const getResult = async (ques: string) => {
   return json.data.result
 };
 
+const APP_KEY = 'cc8cba0a7069'
+export async function DailySentenceApi() {
+  const url = `https://whyta.cn/api/tx/zaoan?key=${APP_KEY}`
+  
+  const res = await fetch(url)
+  const resJson = await res.json()
+  const content = resJson.result.content
+  return content
+}
+
+export async function playboyQuotesApi() {
+  const url = `https://whyta.cn/api/tx/zhanan?key=${APP_KEY}`
+  
+  const res = await fetch(url)
+  const resJson = await res.json()
+  const content = resJson.result.content
+  return content
+}
+
+export async function simpDiaryApi() {
+  const url = `https://whyta.cn/api/tx/tiangou?key=${APP_KEY}`
+  
+  const res = await fetch(url)
+  const resJson = await res.json()
+  const content = resJson.result.content
+  return content
+}

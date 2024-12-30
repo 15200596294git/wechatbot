@@ -1,13 +1,61 @@
-// @ts-nocheck
 import { WechatyBuilder, ScanStatus, log, Message, Wechaty } from 'wechaty'
 import qrcodeTerminal from 'qrcode-terminal'
-import { getResult } from '../request.ts'
+import { getResult, DailySentenceApi, playboyQuotesApi, simpDiaryApi } from '../request.ts'
 import schedule from 'node-schedule'
 import QRCode from 'qrcode'
+import { promisify } from 'node:util'
 
-import { holiday, overtime, drinkWater, waterText, fishText, workdayCountdown, orderText, drinkingText, reverseDrivingText, offWorkText } from '../general/moyu.ts'
-import { moring, order, fish, groupSend, haoNoDrinking, haoNoReverseDriving, logout } from '../general/timer.ts'
-import { isWithinInterval, startOfDay, endOfDay, getHours, set } from 'date-fns';
+import {
+  holiday,
+  overtime,
+  drinkWater,
+  waterText,
+  fishText,
+  workdayCountdown,
+  orderText,
+  drinkingText,
+  reverseDrivingText,
+  offWorkText,
+} from '../general/moyu.ts'
+import {
+  moring,
+  order,
+  fish,
+  groupSend,
+  haoNoDrinking,
+  haoNoReverseDriving,
+  logout,
+} from '../general/timer.ts'
+import { isWithinInterval, startOfDay, endOfDay, getHours, set } from 'date-fns'
+
+const qrcodeToImage = (qrcode: string) => {
+  return QRCode.toDataURL(qrcode, {
+    type: 'image/jpeg',
+    errorCorrectionLevel: 'H',
+    scale: 8,
+  }).then((qrImage) => qrImage)
+}
+
+/** 启动机器人 */
+export function startBotAndReturnScanQRCode() {
+  return new Promise((resolve, reject) => {
+    const bot = WechatyBuilder.build({
+      // puppet: 'wechaty-puppet-wechat4u',
+    })
+
+    bot.on('scan', (qrcode, status) => {
+      resolve(qrcodeToImage(qrcode))
+      onScan(qrcode, status)
+    })
+
+    bot.on('login', ()=> onLogin(bot))
+    bot.on('logout', onLogout)
+    bot.on('message', onMessage)
+    bot.start()
+  })
+}
+
+// startBotAndReturnScanQRCode()
 
 function onScan(qrcode, status) {
   if (status === ScanStatus.Waiting || status === ScanStatus.Timeout) {
@@ -31,15 +79,12 @@ function onScan(qrcode, status) {
 }
 
 function onLogin(bot: Wechaty) {
-  log.info('StarterBot', '%s login', bot)
-
   moring(bot)
   fish(bot)
   order(bot)
   haoNoDrinking(bot)
   haoNoReverseDriving(bot)
   logout(bot)
-
 }
 
 function onLogout(user) {
@@ -60,21 +105,22 @@ async function onMessage(msg: Message) {
       await msg.say(`${talker.name()}, 请输入你要问的问题`)
       return
     } else if (mentionText === '摸鱼办') {
-
       // 获取当前时间
-      const now = new Date();
+      const now = new Date()
 
       // 设置时间区间的开始和结束
-      const startTime = set(now, { hours: 9, minutes: 0, seconds: 0 });
-      const endTime = set(now, { hours: 18, minutes: 0, seconds: 0 });
+      const startTime = set(now, { hours: 9, minutes: 0, seconds: 0 })
+      const endTime = set(now, { hours: 18, minutes: 0, seconds: 0 })
 
       // 检查当前时间是否在 9 点到 18 点之间
-      const isInWorkingHours = isWithinInterval(now, { start: startTime, end: endTime });
+      const isInWorkingHours = isWithinInterval(now, {
+        start: startTime,
+        end: endTime,
+      })
       if (!isInWorkingHours) {
         // groupSend(bot, `现在是下班时间，请上班时间再摸鱼哦！`)
         msg.say('现在是下班时间，请上班时间再摸鱼哦！')
       } else {
-
         const { hour, minute } = workdayCountdown()
         let text = [fishText(), waterText()].join('\n')
         if (hour < 4) {
@@ -92,16 +138,26 @@ async function onMessage(msg: Message) {
       msg.say(await holiday())
       // groupSend(bot, await holiday())
       return
-    } else if(mentionText === '豪哥酒驾') {
-      msg.say('小蟹提醒豪哥:/n' + drinkingText())
-      return 
-    } else if(mentionText === '豪哥逆行') {
-      msg.say('小蟹提醒豪哥:/n' + reverseDrivingText())
+    } else if (mentionText === '豪哥酒驾') {
+      msg.say('小蟹提醒豪哥:\n' + drinkingText())
       return
-    } else if(mentionText === '下班测试') {
+    } else if (mentionText === '豪哥逆行') {
+      msg.say('小蟹提醒豪哥:\n' + reverseDrivingText())
+      return
+    } else if (mentionText === '下班测试') {
       msg.say(await offWorkText())
       return
+    } else if(mentionText === '每日一句') {
+      msg.say(await DailySentenceApi())
+      return
+    } else if(mentionText === '渣男语录') {
+      msg.say(await playboyQuotesApi())
+      return
+    } else if(mentionText === '舔狗日记') {
+      msg.say(await simpDiaryApi())
+      return
     }
+      
     try {
       const result = await getResult(mentionText)
       msg.say(`${talker.name()}, ${result}`)
@@ -110,51 +166,3 @@ async function onMessage(msg: Message) {
     }
   }
 }
-
-/** 启动机器人 */
-export function startBot(cb: (url: string)=> void) {
-
-
-  const bot = WechatyBuilder.build({
-    /**
-     * How to set Wechaty Puppet Provider:
-     *
-     *  1. Specify a `puppet` option when instantiating Wechaty. (like `{ puppet: 'wechaty-puppet-padlocal' }`, see below)
-     *  1. Set the `WECHATY_PUPPET` environment variable to the puppet NPM module name. (like `wechaty-puppet-padlocal`)
-     *
-     * You can use the following providers:
-     *  - wechaty-puppet-wechat (no token required)
-     *  - wechaty-puppet-padlocal (token required)
-     *  - wechaty-puppet-service (token required, see: <https://wechaty.js.org/docs/puppet-services>)
-     *  - etc. see: <https://github.com/wechaty/wechaty-puppet/wiki/Directory>
-     */
-    puppet: 'wechaty-puppet-wechat4u',
-  })
-  
-  bot.on('scan', (qrcode, status)=> {
-    // const qrcodeImageUrl = [
-    //   'https://wechaty.js.org/qrcode/',
-    //   encodeURIComponent(qrcode),
-    // ].join('')
-
-    QRCode.toDataURL(qrcode, { type: 'image/jpeg', errorCorrectionLevel: 'H', scale: 8 }, (err, url)=> {
-      // console.log("🚀 ~ QRCode.toDataURL ~ url:", url)
-      cb(url)
-    })
-    onScan(qrcode, status)
-  })
-  bot.on('login', ()=> onLogin(bot))
-  bot.on('logout', onLogout)
-  bot.on('message', onMessage)
-  
-  bot
-  .start()
-  // .then(() => log.info('StarterBot', 'Starter Bot Started.'))
-  // .catch((e) => log.error('StarterBot', e))
-}
-
-// startBot((url)=> {
-//   // console.log("🚀 ~ startBot ~ url:", url)
-// })
-
-
