@@ -55,7 +55,7 @@ export function startBotAndReturnScanQRCode() {
   })
 }
 
-// startBotAndReturnScanQRCode()
+startBotAndReturnScanQRCode()
 
 function onScan(qrcode, status) {
   if (status === ScanStatus.Waiting || status === ScanStatus.Timeout) {

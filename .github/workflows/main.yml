@@ -34,17 +34,9 @@ jobs:
           username: ${{ secrets.MY_USER }} # 服务器用户名
           password: ${{ secrets.MY_PASS }} # 服务器密码
           script: |
-            # echo $PATH
-            # echo $NVM_BIN
-            export NVM_BIN=/root/.nvm/versions/node/v20.16.0/bin # 定义环境变量
-            export PATH=$PATH:$NVM_BIN # 将nvm添加到PATH中
             cd /usr/local/src/wechatbot # 进入服务器中的端工程所在的目录
-            npm install # 安装项目依赖
-            pm2 restart 0
-            sleep 5 # 暂停5s，输出可能有延迟
-            pm2 logs --nostream
-            # pm2 delete myBlogServer # 删除旧的进程
-            # pm2 start --name myBlogServer npm -- run server # 启动新的进程
+            docker build -t my-bot .
+            docker run -d -p 3000:3000 my-bot
 
 
 
