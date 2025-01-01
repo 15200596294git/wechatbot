@@ -1,4 +1,4 @@
-FROM anolis-registry.cn-zhangjiakou.cr.aliyuncs.com/openanolis/node:18.17.1-23-minimal
+FROM anolis-registry.cn-zhangjiakou.cr.aliyuncs.com/openanolis/node:latest
 
 WORKDIR /app
 
