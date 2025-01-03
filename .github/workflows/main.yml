@@ -39,7 +39,7 @@ jobs:
             docker stop my-bot
             docker rm my-bot
             docker build -t my-bot .
-            docker run -d -p 3000:3000 my-bot --name my-bot
+            docker run --name my-bot -d -p 3000:3000 my-bot 
 
 
 
