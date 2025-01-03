@@ -1,4 +1,4 @@
-FROM alibaba-cloud-linux-3-registry.cn-hangzhou.cr.aliyuncs.com/alinux3/node:20.16
+FROM node:20.18
 
 USER root
 
