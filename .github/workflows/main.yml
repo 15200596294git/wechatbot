@@ -36,6 +36,8 @@ jobs:
           password: ${{ secrets.MY_PASS }} # 服务器密码
           script: |
             cd /usr/local/src/wechatbot # 进入服务器中的端工程所在的目录
+            docker stop my-bot
+            docker rm my-bot
             docker build -t my-bot .
             docker run -d -p 3000:3000 my-bot
 
