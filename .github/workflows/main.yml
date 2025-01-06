@@ -6,17 +6,17 @@ on:
   workflow_dispatch:
 jobs:
   deploy:
-    runs-on: ubuntu
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-      uses: actions/checkout@v2
+        uses: actions/checkout@v2
       - name: step2
-      uses: appleboy/ssh-action@1.2.0
-      with:
-        host: ${{secrets.MY_HOST}}
-        username: ${{secrets.MY_USER}}
-        key: ${{secrets.SSH_KEY}}
-        script_path: ".github/scripts/main.sh"
+        uses: appleboy/ssh-action@1.2.0
+        with:
+          host: ${{secrets.MY_HOST}}
+          username: ${{secrets.MY_USER}}
+          key: ${{secrets.SSH_KEY}}
+          script_path: ".github/scripts/main.sh"
 
 
 
