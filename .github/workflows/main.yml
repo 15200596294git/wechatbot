@@ -1,8 +1,8 @@
 name: CI Workflow
 on:
   push:
-  banches:
-    - main
+    branches:
+      - main
   workflow_dispatch:
 jobs:
   deploy:
