@@ -1,45 +1,22 @@
-name: Hello World
+name: CI Workflow
 on:
   push:
-    branches: 
-      - main
+  banches:
+    - main
   workflow_dispatch:
-
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: rsync deployments
-        uses: burnett01/rsync-deployments@7.0.1
-        with:
-          switches: -av --exclude='ding-dong-bot.memory-card.json'
-          path: ./* # 源路径（工作流）
-          remote_path: /usr/local/src/wechatbot # 目标路径（服务器）
-          remote_host: ${{ secrets.MY_HOST }}
-          remote_user: ${{ secrets.MY_USER }}
-          remote_key: ${{ secrets.SSH_KEY }}
-          # - name: Deploy
-          #   uses: nogsantos/scp-deploy@master
-          #   with:
-          #     host: ${{ secrets.MY_HOST }} # 服务器IP（需要在GitHub上自行配置对应的secret）
-          #     user: ${{ secrets.MY_USER }} # 服务器用户名
-          #     key: ${{ secrets.SSH_KEY }} # 公钥
-          #     src: './*' # 源路径（工作流）
-          #     remote: /usr/local/src/wechatbot # 目标路径（服务器）
-      - name: Executing remote ssh commands
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.MY_HOST }} # 服务器IP（需要在GitHub上自行配置对应的secret）
-          username: ${{ secrets.MY_USER }} # 服务器用户名
-          password: ${{ secrets.MY_PASS }} # 服务器密码
-          script: |
-            cd /usr/local/src/wechatbot # 进入服务器中的端工程所在的目录
-            docker stop my-bot
-            docker rm my-bot
-            docker build -t my-bot .
-            docker run --name my-bot -d -p 3000:3000 my-bot 
+      - name: Checkout code
+      uses: actions/checkout@v2
+      - name: step2
+      uses: appleboy/ssh-action@1.2.0
+      with:
+        host: ${{secrets.MY_HOST}}
+        username: ${{secrets.MY_USER}}
+        key: ${{secrets.SSH_KEY}}
+        script_path: ".github/scripts/main.sh"
 
 
 
