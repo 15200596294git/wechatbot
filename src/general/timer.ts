@@ -27,7 +27,7 @@ export function moring(bot: Wechaty) {
 
 // 喝水,摸鱼文案,下班倒计时
 export function fish(bot: Wechaty) {
-  schedule.scheduleJob('30 9-11,14-17/1 * * 1-5', () => {
+  schedule.scheduleJob('*/30 9-11,14-17 * * 1-5', () => {
 
     const { hour, minute } = workdayCountdown()
 
@@ -99,7 +99,7 @@ export async function logout(bot: Wechaty) {
 export function ping(bot:Wechaty) {
   schedule.scheduleJob('*/5 * * * *', async()=> {
     const targetContact = await bot.Contact.find({ name: 'hustle' })
-    
+
     if (targetContact) {
       // 发送消息
       await targetContact.say('ping！')
