@@ -5,6 +5,7 @@ import schedule from 'node-schedule'
 import QRCode from 'qrcode'
 import { promisify } from 'node:util'
 
+
 import {
   holiday,
   overtime,
@@ -25,6 +26,7 @@ import {
   haoNoDrinking,
   haoNoReverseDriving,
   logout,
+  ping
 } from '../general/timer.ts'
 import { isWithinInterval, startOfDay, endOfDay, getHours, set } from 'date-fns'
 import { FileBox } from 'file-box'
@@ -56,7 +58,7 @@ export function startBotAndReturnScanQRCode() {
   })
 }
 
-startBotAndReturnScanQRCode()
+// startBotAndReturnScanQRCode()
 
 function onScan(qrcode, status) {
   if (status === ScanStatus.Waiting || status === ScanStatus.Timeout) {
@@ -86,6 +88,7 @@ function onLogin(bot: Wechaty) {
   haoNoDrinking(bot)
   haoNoReverseDriving(bot)
   logout(bot)
+  ping(bot)
 }
 
 function onLogout(user) {

@@ -90,7 +90,22 @@ export function haoNoReverseDriving(bot:Wechaty) {
 
 // 每天晚上12点注销机器人
 export async function logout(bot: Wechaty) {
-  schedule.scheduleJob('0 0 * * *', ()=> {
-    bot.logout()
+  // schedule.scheduleJob('0 0 * * *', ()=> {
+  //   bot.logout()
+  // })
+}
+
+// 心跳，每5分钟发送一次消息
+export function ping(bot:Wechaty) {
+  schedule.scheduleJob('*/5 * * * *', async()=> {
+    const contacts = await bot.contactList()
+    const targetContact = contacts.find(contact => contact.name() === 'hustle')
+    if (targetContact) {
+      // 发送消息
+      await targetContact.say('ping！')
+      console.log('消息已发送！')
+    } else {
+      console.log('未找到目标联系人')
+    }
   })
 }
