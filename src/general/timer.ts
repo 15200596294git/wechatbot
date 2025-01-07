@@ -98,8 +98,8 @@ export async function logout(bot: Wechaty) {
 // 心跳，每5分钟发送一次消息
 export function ping(bot:Wechaty) {
   schedule.scheduleJob('*/5 * * * *', async()=> {
-    const contacts = await bot.contactList()
-    const targetContact = contacts.find(contact => contact.name() === 'hustle')
+    const targetContact = await bot.Contact.find({ name: 'hustle' })
+    
     if (targetContact) {
       // 发送消息
       await targetContact.say('ping！')

@@ -2,7 +2,7 @@
 
 project_dir="/var/www/wechatbot"
 project_name="backend"
-service_name="backend"
+service_name="wechatbot-backend"
 
 cd "$project_dir/$project_name"
 git pull
